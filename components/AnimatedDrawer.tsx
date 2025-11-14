@@ -134,6 +134,7 @@ export const AnimatedDrawer: React.FC<AnimatedDrawerProps> = ({
 
           <motion.div
             ref={drawerRef}
+            layoutId="drawer-container"
             className="fixed inset-x-0 bottom-10 mx-4 z-50 bg-white rounded-3xl shadow-2xl max-h-[90vh] flex flex-col focus:outline-none"
             variants={drawerVariants}
             initial="hidden"
@@ -146,40 +147,59 @@ export const AnimatedDrawer: React.FC<AnimatedDrawerProps> = ({
             layout
             transition={{
               layout: {
-                duration: 0.3,
+                duration: 0.4,
                 ease: [0.32, 0.72, 0, 1]
               }
             }}
           >
-            {menuHistory.length > 0 && (
-              <div className="flex items-center justify-between px-5 py-4">
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={handleBack}
-                    className="flex items-center gap-1 text-sm text-black hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg p-1 -ml-1 transition-colors"
-                    aria-label="Go back to previous menu"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                    <span className="font-medium text-black">Back</span>
-                  </button>
-                </div>
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              {menuHistory.length > 0 && (
+                <motion.div
+                  layoutId="drawer-header"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center justify-between px-5 py-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleBack}
+                      className="flex items-center gap-1 text-sm text-black hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg p-1 -ml-1 transition-colors"
+                      aria-label="Go back to previous menu"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                      <span className="font-medium text-black">Back</span>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <div className="flex-1 overflow-y-auto min-h-0 relative scrollbar-hide">
+            <motion.div 
+              layoutId="drawer-content"
+              className="flex-1 overflow-y-auto min-h-0 relative scrollbar-hide"
+              layout
+            >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.nav
                   key={currentMenu.map(item => item.id).join('-')}
+                  layoutId={`menu-level-${menuHistory.length}`}
                   initial={menuHistory.length === 0 ? { opacity: 1 } : { opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{
-                    duration: 0.2,
-                    ease: [0.32, 0.72, 0, 1]
+                    duration: 0.3,
+                    ease: [0.32, 0.72, 0, 1],
+                    layout: {
+                      duration: 0.4,
+                      ease: [0.32, 0.72, 0, 1]
+                    }
                   }}
                   className="px-2 py-2"
                   role="menu"
                   aria-label={currentTitle}
+                  layout
                 >
                   {currentMenu.map((item, index) => (
                     <MenuItem
@@ -191,7 +211,7 @@ export const AnimatedDrawer: React.FC<AnimatedDrawerProps> = ({
                   ))}
                 </motion.nav>
               </AnimatePresence>
-            </div>
+            </motion.div>
           </motion.div>
         </>
       )}

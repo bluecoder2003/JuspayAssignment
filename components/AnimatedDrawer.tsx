@@ -135,7 +135,7 @@ export const AnimatedDrawer: React.FC<AnimatedDrawerProps> = ({
           <motion.div
             ref={drawerRef}
             layoutId="drawer-container"
-            className="fixed left-4 right-4 z-50 bg-white rounded-3xl shadow-2xl h-[80dvh] flex flex-col focus:outline-none"
+            className="fixed left-4 right-4 z-50 bg-white rounded-3xl shadow-2xl h-fit max-h-[80dvh] flex flex-col focus:outline-none"
             style={{
               bottom: 'max(1rem, env(safe-area-inset-bottom))',
             }}
